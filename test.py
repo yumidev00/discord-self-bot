@@ -20,9 +20,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    # Ignore messages from the bot itself
     if message.author == bot.user:
-        # send message to the channel
         if message.content.startswith('!chat'):
             await message.channel.send('REPLY HERE')
 
