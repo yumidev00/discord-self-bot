@@ -1,1 +1,1 @@
-# discord_ai
+# discord self-bot
