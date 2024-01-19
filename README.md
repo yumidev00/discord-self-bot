@@ -1,1 +1,1 @@
-# discord self-bot
+# discord selfbot
