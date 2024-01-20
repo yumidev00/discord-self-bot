@@ -6,7 +6,7 @@ You can use it as a personal assistant, chatbot, or whatever you want. Needless 
 
 # How to use
 
-move `dotenv` to `.env` and fill it with your token
+move/rename `dotenv` to `.env` and fill it with your Discord token
 
 install missing dependencies if needed
 
