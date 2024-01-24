@@ -86,12 +86,12 @@ async def translate(ctx):
         'formality': 'less' # [default, more, less]
     }
 
-    # response = requests.post(url, headers=headers, data=data)
-    # response_json = response.json()
+    response = requests.post(url, headers=headers, data=data)
+    response_json = response.json()
 
-    # translation = response_json['translations'][0]['text']
+    translation = response_json['translations'][0]['text']
 
-    # await ctx.message.edit(content=translation)
+    await ctx.message.edit(content=translation)
 
 
 bot.run(TOKEN)
