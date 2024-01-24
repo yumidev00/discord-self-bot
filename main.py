@@ -30,6 +30,15 @@ async def on_message(message):
                 async with message.channel.typing():
                     await asyncio.sleep(10)
                     await message.reply(message_reply)
+        
+        elif message.content.startswith('!translate'):
+            message_text = message.clean_content.replace('!translate', '').strip()
+            message_reply = translate(message_text)
+
+            # await message.delete() # uncomment this if you want to delete the original message instead of editing it
+            # await message.channel.send(message_reply)
+
+            await message.edit(content=message_reply)
 
 # if not working, try to change the authorization token/model or switch to a different platform
 def get_response(message):
@@ -70,5 +79,27 @@ def get_response(message):
             return response.text
     else:
         return response.text
+
+# API documentation: https://www.deepl.com/docs-api/translating-text/    
+def translate(message):
+
+    url = 'https://api-free.deepl.com/v2/translate'
+    headers = {
+        'Authorization': 'DeepL-Auth-Key 9456c510-a517-965d-0305-d2a7d6d930e0:fx' # change this to your own API key
+    }
+    data = {
+        'text': f'{message}',
+        'target_lang': 'JA', # [EN, DE, FR, ES, IT, PL, RU, JA, ZH, ...]
+        # 'context': '', # [optional]
+        'formality': 'less' # [default, more, less]
+    }
+
+    response = requests.post(url, headers=headers, data=data)
+    response_json = response.json()
+
+    translation = response_json['translations'][0]['text']
+
+    return translation
+
 
 bot.run(TOKEN)
