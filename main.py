@@ -73,23 +73,25 @@ def get_response(message):
 @bot.command()
 async def translate(ctx):
 
+    message_text = ctx.message.clean_content.replace('!translate', '').strip()
+
     url = 'https://api-free.deepl.com/v2/translate'
     headers = {
         'Authorization': 'DeepL-Auth-Key 9456c510-a517-965d-0305-d2a7d6d930e0:fx' # change this to your own API key
     }
     data = {
-        'text': f'{ctx.message.content}',
+        'text': f'{message_text}',
         'target_lang': 'JA', # [EN, DE, FR, ES, IT, PL, RU, JA, ZH, ...]
         # 'context': '', # [optional]
         'formality': 'less' # [default, more, less]
     }
 
-    response = requests.post(url, headers=headers, data=data)
-    response_json = response.json()
+    # response = requests.post(url, headers=headers, data=data)
+    # response_json = response.json()
 
-    translation = response_json['translations'][0]['text']
+    # translation = response_json['translations'][0]['text']
 
-    await ctx.message.edit(content=translation)
+    # await ctx.message.edit(content=translation)
 
 
 bot.run(TOKEN)
