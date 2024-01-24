@@ -14,33 +14,22 @@ async def on_ready():
     print(f'Logged in as {bot.user.name}')
     await bot.change_presence(activity=discord.Game(name='Hello World'), status=discord.Status.dnd)
 
-@bot.event
-async def on_message(message):
+@bot.command()
+async def chat(ctx):
 
-    if message.author == bot.user: # keep it like this until you know what you're doing (or you'll have a bad time)
-        if message.content.startswith('!chat'):
-            message_text = message.clean_content.replace('!chat', '').strip()
-            message_reply = get_response(message_text)
+    if ctx.author == bot.user: # keep it like this until you know what you're doing (or you'll have a bad time)
+        message_text = ctx.message.clean_content.replace('!chat', '').strip()
+        message_reply = get_response(message_text)
 
-            if isinstance(message.channel, discord.DMChannel):
-                async with message.channel.typing():
-                    await asyncio.sleep(10)
-                    await message.channel.send(message_reply)
-            else:
-                async with message.channel.typing():
-                    await asyncio.sleep(10)
-                    await message.reply(message_reply)
-        
-        elif message.content.startswith('!translate'):
-            message_text = message.clean_content.replace('!translate', '').strip()
-            message_reply = translate(message_text)
+        if isinstance(ctx.channel, discord.DMChannel):
+            async with ctx.channel.typing():
+                await asyncio.sleep(10)
+                await ctx.channel.send(message_reply)
+        else:
+            async with ctx.channel.typing():
+                await asyncio.sleep(10)
+                await ctx.reply(message_reply)
 
-            # await message.delete() # uncomment this if you want to delete the original message instead of editing it
-            # await message.channel.send(message_reply)
-
-            await message.edit(content=message_reply)
-
-# if not working, try to change the authorization token/model or switch to a different platform
 def get_response(message):
 
     headers = {
@@ -81,14 +70,15 @@ def get_response(message):
         return response.text
 
 # API documentation: https://www.deepl.com/docs-api/translating-text/    
-def translate(message):
+@bot.command()
+async def translate(ctx):
 
     url = 'https://api-free.deepl.com/v2/translate'
     headers = {
         'Authorization': 'DeepL-Auth-Key 9456c510-a517-965d-0305-d2a7d6d930e0:fx' # change this to your own API key
     }
     data = {
-        'text': f'{message}',
+        'text': f'{ctx.message.content}',
         'target_lang': 'JA', # [EN, DE, FR, ES, IT, PL, RU, JA, ZH, ...]
         # 'context': '', # [optional]
         'formality': 'less' # [default, more, less]
@@ -99,7 +89,7 @@ def translate(message):
 
     translation = response_json['translations'][0]['text']
 
-    return translation
+    await ctx.message.edit(content=translation)
 
 
 bot.run(TOKEN)
